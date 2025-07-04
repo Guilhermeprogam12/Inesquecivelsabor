@@ -333,238 +333,219 @@
         <span>Item adicionado ao carrinho!</span>
     </div>
 
-    <script>
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
-        const cartBtn = document.getElementById('cart-btn');
-        const cartSidebar = document.getElementById('cart-sidebar');
-        const closeCartBtn = document.getElementById('close-cart');
-        const cartOverlay = document.getElementById('cart-overlay');
-        const addToCartBtns = document.querySelectorAll('.add-to-cart');
-        const cartCount = document.getElementById('cart-count');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const emptyCartMessage = document.getElementById('empty-cart-message');
-        const cartSummary = document.getElementById('cart-summary');
-        const cartSubtotal = document.getElementById('cart-subtotal');
-        const cartTotal = document.getElementById('cart-total');
-        const deliveryFee = document.getElementById('delivery-fee');
-        const successToast = document.getElementById('success-toast');
-        
-        let cart = [];
-        
-        function toggleCart() {
-            const isHidden = cartSidebar.classList.contains('translate-x-full');
-            cartSidebar.classList.toggle('translate-x-full', !isHidden);
-            cartOverlay.classList.toggle('hidden', !isHidden);
-            document.body.style.overflow = isHidden ? 'hidden' : 'auto';
-        }
-        
-        cartBtn.addEventListener('click', toggleCart);
-        closeCartBtn.addEventListener('click', toggleCart);
-        cartOverlay.addEventListener('click', toggleCart);
-        
-        addToCartBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                const name = btn.dataset.name;
-                const price = parseFloat(btn.dataset.price);
-                
-                const existingItem = cart.find(item => item.id === id);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ id, name, price, quantity: 1 });
-                }
-                updateCart();
-                showSuccessToast();
-            });
-        });
-        
-        function updateCart() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            if (cart.length === 0) {
-                emptyCartMessage.classList.remove('hidden');
-                cartSummary.classList.add('hidden');
-                cartItemsContainer.innerHTML = '';
-            } else {
-                emptyCartMessage.classList.add('hidden');
-                cartSummary.classList.remove('hidden');
-                
-                cartItemsContainer.innerHTML = cart.map(item => `
-                    <div class="flex justify-between items-center py-4 border-b cart-item-enter" data-id="${item.id}">
-                        <div>
-                            <h4 class="font-medium">${item.name}</h4>
-                            <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2)}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <button class="decrease-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-minus"></i></button>
-                            <span class="mx-2">${item.quantity}</span>
-                            <button class="increase-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-plus"></i></button>
-                            <span class="ml-4 font-medium text-right w-16">R$ ${(item.price * item.quantity).toFixed(2)}</span>
-                            <button class="remove-item text-red-500 hover:text-red-700 ml-4"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `).join('');
-                
-                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
-                const total = subtotal + delivery;
-                
-                cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`;
-                cartTotal.textContent = `R$ ${total.toFixed(2)}`;
-            }
-        }
-        
-        cartItemsContainer.addEventListener('click', (e) => {
-            const button = e.target.closest('button');
-            if (!button) return;
-            
-            const itemElement = e.target.closest('.cart-item-enter');
-            const id = itemElement.dataset.id;
-            const item = cart.find(item => item.id === id);
+   <script>
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
 
-            if (button.classList.contains('increase-quantity')) {
-                item.quantity++;
-            } else if (button.classList.contains('decrease-quantity')) {
-                if (item.quantity > 1) {
-                    item.quantity--;
-                } else {
-                    cart = cart.filter(cartItem => cartItem.id !== id);
-                }
-            } else if (button.classList.contains('remove-item')) {
-                cart = cart.filter(cartItem => cartItem.id !== id);
+    const cartBtn = document.getElementById('cart-btn');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const closeCartBtn = document.getElementById('close-cart');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const addToCartBtns = document.querySelectorAll('.add-to-cart');
+    const cartCount = document.getElementById('cart-count');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartSummary = document.getElementById('cart-summary');
+    const cartSubtotal = document.getElementById('cart-subtotal');
+    const cartTotal = document.getElementById('cart-total');
+    const deliveryFee = document.getElementById('delivery-fee');
+    const successToast = document.getElementById('success-toast');
+
+    let cart = [];
+
+    function toggleCart() {
+        const isHidden = cartSidebar.classList.contains('translate-x-full');
+        cartSidebar.classList.toggle('translate-x-full', !isHidden);
+        cartOverlay.classList.toggle('hidden', !isHidden);
+        document.body.style.overflow = isHidden ? 'hidden' : 'auto';
+    }
+
+    cartBtn.addEventListener('click', toggleCart);
+    closeCartBtn.addEventListener('click', toggleCart);
+    cartOverlay.addEventListener('click', toggleCart);
+
+    addToCartBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const name = btn.dataset.name;
+            const price = parseFloat(btn.dataset.price);
+
+            const existingItem = cart.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
             }
             updateCart();
+            showSuccessToast();
         });
-        
-        function showSuccessToast() {
-            successToast.classList.remove('translate-y-16', 'opacity-0');
-            successToast.classList.add('translate-y-0', 'opacity-100');
-            setTimeout(() => {
-                successToast.classList.remove('translate-y-0', 'opacity-100');
-                successToast.classList.add('translate-y-16', 'opacity-0');
-            }, 3000);
-        }
-        
-        // --- NEW: PIX QR CODE AND PAYLOAD GENERATION ---
-        
-        /**
-         * Calculates CRC16 for the PIX payload.
-         * @param {string} data
-         * @returns {string} CRC16 checksum
-         */
-        function crc16(data) {
-            let crc = 0xFFFF;
-            for (let i = 0; i < data.length; i++) {
-                crc ^= data.charCodeAt(i) << 8;
-                for (let j = 0; j < 8; j++) {
-                    crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
-                }
-            }
-            return ('0000' + (crc & 0xFFFF).toString(16).toUpperCase()).slice(-4);
-        }
+    });
 
-        /**
-         * Formats a field for the PIX payload.
-         * @param {string} id
-         * @param {string} value
-         * @returns {string} Formatted field
-         */
-        function formatField(id, value) {
-            const len = ('0' + value.length).slice(-2);
-            return `${id}${len}${value}`;
-        }
+    function updateCart() {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCount.textContent = totalItems;
 
-        document.getElementById('checkout-btn').addEventListener('click', () => {
+        if (cart.length === 0) {
+            emptyCartMessage.classList.remove('hidden');
+            cartSummary.classList.add('hidden');
+            cartItemsContainer.innerHTML = '';
+        } else {
+            emptyCartMessage.classList.add('hidden');
+            cartSummary.classList.remove('hidden');
+
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="flex justify-between items-center py-4 border-b cart-item-enter" data-id="${item.id}">
+                    <div>
+                        <h4 class="font-medium">${item.name}</h4>
+                        <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2)}</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="decrease-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-minus"></i></button>
+                        <span class="mx-2">${item.quantity}</span>
+                        <button class="increase-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-plus"></i></button>
+                        <span class="ml-4 font-medium text-right w-16">R$ ${(item.price * item.quantity).toFixed(2)}</span>
+                        <button class="remove-item text-red-500 hover:text-red-700 ml-4"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
             const total = subtotal + delivery;
 
-            // PIX Configuration
-            const pixKey = '16991420161'; // Your actual PIX key
-            const merchantName = 'Inesquecivel Sabor'; // Your business name
-            const merchantCity = 'SERTANIA'; // City name (max 15 chars)
+            cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`;
+            cartTotal.textContent = `R$ ${total.toFixed(2)}`;
+        }
+    }
 
-            // Generate a unique transaction ID (txid)
-            const txid = Math.random().toString(36).substring(2, 12).toUpperCase() + 'P' + cart.length;
+    cartItemsContainer.addEventListener('click', (e) => {
+        const button = e.target.closest('button');
+        if (!button) return;
 
-            // Build the PIX payload
-            let payload = '';
-            payload += formatField('00', '01'); // Payload Format Indicator
-            payload += formatField('01', '11'); // Point of Initiation Method (11 for static, 12 for dynamic)
-            let merchantAccountInfo = '';
-            merchantAccountInfo += formatField('00', 'br.gov.bcb.pix'); // GUI
-            merchantAccountInfo += formatField('01', pixKey);
-            payload += formatField('26', merchantAccountInfo);
-            payload += formatField('52', '0000'); // Merchant Category Code
-            payload += formatField('53', '986'); // Transaction Currency (BRL)
-            payload += formatField('54', total.toFixed(2)); // Transaction Amount
-            payload += formatField('58', 'BR'); // Country Code
-            payload += formatField('59', merchantName.substring(0, 25)); // Merchant Name
-            payload += formatField('60', merchantCity.substring(0, 15)); // Merchant City
-            let additionalData = formatField('05', txid);
-            payload += formatField('62', additionalData);
-            
-            payload += '6304'; // CRC16 ID
-            const crc = crc16(payload);
-            const pixPayload = payload + crc;
+        const itemElement = e.target.closest('.cart-item-enter');
+        const id = itemElement.dataset.id;
+        const item = cart.find(item => item.id === id);
 
-            const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pixPayload)}`;
+        if (button.classList.contains('increase-quantity')) {
+            item.quantity++;
+        } else if (button.classList.contains('decrease-quantity')) {
+            if (item.quantity > 1) {
+                item.quantity--;
+            } else {
+                cart = cart.filter(cartItem => cartItem.id !== id);
+            }
+        } else if (button.classList.contains('remove-item')) {
+            cart = cart.filter(cartItem => cartItem.id !== id);
+        }
+        updateCart();
+    });
 
-            let orderDetails = "Olá! Segue o comprovante do pedido abaixo:\n\n";
-            cart.forEach(item => {
-                orderDetails += `▪️ ${item.quantity}x ${item.name}\n`;
-            });
-            orderDetails += `\n*Total pago: R$ ${total.toFixed(2)}* (ID: ${txid})`;
-            const encodedOrderDetails = encodeURIComponent(orderDetails);
-            const whatsappLink = `https://wa.me/5516991420161?text=${encodedOrderDetails}`;
+    function showSuccessToast() {
+        successToast.classList.remove('translate-y-16', 'opacity-0');
+        successToast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+            successToast.classList.remove('translate-y-0', 'opacity-100');
+            successToast.classList.add('translate-y-16', 'opacity-0');
+        }, 3000);
+    }
 
-            // Create and show the modal
-            const pixModal = document.createElement('div');
-            pixModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
-            pixModal.id = 'pix-modal';
-            pixModal.innerHTML = `
-                <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-amber-900">Pague com PIX</h3>
-                        <button id="close-pix" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
-                    </div>
-                    <p class="mb-4">Total: <span class="font-bold text-xl">R$ ${total.toFixed(2)}</span></p>
-                    <p class="text-sm mb-2">1. Escaneie o QR Code abaixo:</p>
-                    <img src="${qrCodeUrl}" alt="PIX QR Code" class="mx-auto my-2 border rounded-lg">
-                    <p class="text-sm my-3">2. Ou copie o código e cole no seu app:</p>
-                    <div class="pix-code-box">${pixPayload}</div>
-                    <button id="copy-pix" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded-lg w-full mt-2">
-                        <i class="fas fa-copy mr-2"></i>Copiar Código PIX
-                    </button>
-                    <div class="my-4 border-t"></div>
-                    <p class="text-sm mb-3">3. Após pagar, envie o comprovante:</p>
-                    <a href="${whatsappLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-full text-center transition w-full inline-block">
-                        <i class="fab fa-whatsapp mr-2"></i> Enviar Comprovante
-                    </a>
-                </div>
-            `;
-            document.body.appendChild(pixModal);
+    // --- CÓDIGO PIX CORRIGIDO ---
 
-            const closeModal = () => document.body.removeChild(pixModal);
-            
-            document.getElementById('close-pix').addEventListener('click', closeModal);
-            
-            document.getElementById('copy-pix').addEventListener('click', (e) => {
-                const button = e.target.closest('button');
-                navigator.clipboard.writeText(pixPayload);
-                button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
-                setTimeout(() => {
-                    button.innerHTML = '<i class="fas fa-copy mr-2"></i>Copiar Código PIX';
-                }, 2000);
-            });
+    function formatField(id, value) {
+        const len = value.length.toString().padStart(2, '0');
+        return `${id}${len}${value}`;
+    }
+
+    function crc16(data) {
+        let crc = 0xFFFF;
+        for (let i = 0; i < data.length; i++) {
+            crc ^= data.charCodeAt(i) << 8;
+            for (let j = 0; j < 8; j++) {
+                crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+            }
+        }
+        return crc.toString(16).toUpperCase().padStart(4, '0');
+    }
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
+        const total = subtotal + delivery;
+
+        const pixKey = '16991420161';
+        const merchantName = 'Inesquecivel Sabor'; 
+        const merchantCity = 'Sertaozinho';
+        const txid = '***'; 
+
+        const merchantAccountInfo = formatField('00', 'br.gov.bcb.pix') + formatField('01', pixKey);
+        const additionalData = formatField('05', txid);
+        
+        let payload = [
+            formatField('00', '01'),
+            formatField('26', merchantAccountInfo),
+            formatField('52', '0000'),
+            formatField('53', '986'),
+            formatField('54', total.toFixed(2)),
+            formatField('58', 'BR'),
+            formatField('59', merchantName),
+            formatField('60', merchantCity),
+            formatField('62', additionalData)
+        ].join('');
+
+        const payloadWithCrc = payload + '6304' + crc16(payload + '6304');
+        
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(payloadWithCrc)}`;
+
+        let orderDetails = "Olá! Segue o comprovante do pedido abaixo:\n\n";
+        cart.forEach(item => {
+            orderDetails += `▪️ ${item.quantity}x ${item.name}\n`;
         });
-    </script>
+        orderDetails += `\n*Total pago: R$ ${total.toFixed(2)}*`;
+        const encodedOrderDetails = encodeURIComponent(orderDetails);
+        const whatsappLink = `https://wa.me/5516991420161?text=${encodedOrderDetails}`;
+
+        const pixModal = document.createElement('div');
+        pixModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+        pixModal.id = 'pix-modal';
+        pixModal.innerHTML = `
+            <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-amber-900">Pague com PIX</h3>
+                    <button id="close-pix" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+                </div>
+                <p class="mb-4">Total: <span class="font-bold text-xl">R$ ${total.toFixed(2)}</span></p>
+                <p class="text-sm mb-2">1. Escaneie o QR Code abaixo:</p>
+                <img src="${qrCodeUrl}" alt="PIX QR Code" class="mx-auto my-2 border rounded-lg">
+                <p class="text-sm my-3">2. Ou copie o código e cole no seu app:</p>
+                <div class="pix-code-box" style="word-wrap: break-word; background-color: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.8rem; border: 1px solid #e5e7eb; color: #374151;">${payloadWithCrc}</div>
+                <button id="copy-pix" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded-lg w-full mt-2">
+                    <i class="fas fa-copy mr-2"></i>Copiar Código PIX
+                </button>
+                <div class="my-4 border-t"></div>
+                <p class="text-sm mb-3">3. Após pagar, clique para nos avisar:</p>
+                <a href="${whatsappLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-full text-center transition w-full inline-block">
+                    <i class="fab fa-whatsapp mr-2"></i> Avisei sobre o Pagamento
+                </a>
+            </div>
+        `;
+        document.body.appendChild(pixModal);
+
+        const closeModal = () => document.body.removeChild(pixModal);
+        
+        document.getElementById('close-pix').addEventListener('click', closeModal);
+        
+        document.getElementById('copy-pix').addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            navigator.clipboard.writeText(payloadWithCrc);
+            button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-copy mr-2"></i>Copiar Código PIX';
+            }, 2000);
+        });
+    });
+</script>
 </body>
 </html>
