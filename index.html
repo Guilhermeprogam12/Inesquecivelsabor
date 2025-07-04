@@ -4,22 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inesquecível Sabor | Pães Artesanais</title>
-
     <link rel="icon" href="logo.png" type="image/png">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/gh/renanlido/pix-qr-code-generator@main/dist/pix-qr-code-generator.min.js"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .bread-card { display: flex; flex-direction: column; }
         .bread-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
-        .flavor-tag { position: absolute; top: -10px; right: -10px; transform: rotate(15deg); }
         .hero-pattern { background-color: #fee2e2; background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 30px 30px; opacity: 0.4; }
-        .pix-code-box { word-wrap: break-word; background-color: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.8rem; border: 1px solid #e5e7eb; color: #374151; text-align: left; }
     </style>
 </head>
 <body>
@@ -51,94 +44,95 @@
         </div>
     </header>
 
-    <section class="relative py-16 md:py-24">
-        <div class="absolute inset-0 hero-pattern"></div>
-        <div class="relative container mx-auto px-4 flex flex-col items-center text-center">
-            <div class="md:w-2/3">
-                <h2 class="text-3xl md:text-5xl font-bold text-red-900 mb-4">Pães Gourmet <span class="text-red-700">Recheados</span></h2>
-                <p class="text-lg text-gray-700 mb-6">Feitos artesanalmente com ingredientes selecionados para levar até você uma experiência única de sabor.</p>
-                <a href="#produtos" class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-full shadow-md transition inline-block">Conheça nossos sabores</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="produtos" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-red-900 mb-12">Nossos Sabores</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition relative">
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-xl font-bold text-red-900 mb-2">Calabresa com Catupiry</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com calabresa defumada e cremoso catupiry original.</p>
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-xl font-bold text-red-700">R$ 29,99</span>
-                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="1" data-name="Calabresa com Catupiry" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-xl font-bold text-red-900 mb-2">Presunto com Catupiry</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com presunto premium e catupiry cremoso.</p>
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-xl font-bold text-red-700">R$ 29,99</span>
-                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="2" data-name="Presunto com Catupiry" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-xl font-bold text-red-900 mb-2">Tradicional (Sem recheio)</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Pão artesanal feito com farinha especial e fermentação natural.</p>
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-xl font-bold text-red-700">R$ 29,99</span>
-                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="3" data-name="Tradicional (Sem recheio)" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
-                     <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-xl font-bold text-red-900 mb-2">Calabresa Acebolada</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com calabresa defumada e cebola caramelizada.</p>
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-xl font-bold text-red-700">R$ 29,99</span>
-                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="4" data-name="Calabresa Acebolada" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition relative">
-                    <div class="flavor-tag bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow">DOCE</div>
-                    <div class="p-6 flex-grow flex flex-col">
-                        <h3 class="text-xl font-bold text-red-900 mb-2">Chocolate Ao Leite</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com chocolate ao leite cremoso derretido.</p>
-                        <div class="flex justify-between items-center mt-4">
-                            <span class="text-xl font-bold text-red-700">R$ 29,99</span>
-                            <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="5" data-name="Chocolate Ao Leite" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
-                        </div>
-                    </div>
+    <main>
+        <section class="relative py-16 md:py-24">
+            <div class="absolute inset-0 hero-pattern"></div>
+            <div class="relative container mx-auto px-4 flex flex-col items-center text-center">
+                <div class="md:w-2/3">
+                    <h2 class="text-3xl md:text-5xl font-bold text-red-900 mb-4">Pães Gourmet <span class="text-red-700">Recheados</span></h2>
+                    <p class="text-lg text-gray-700 mb-6">Feitos artesanalmente com ingredientes selecionados para levar até você uma experiência única de sabor.</p>
+                    <a href="#produtos" class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-full shadow-md transition inline-block">Conheça nossos sabores</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="sobre" class="py-16 bg-red-50">
-        <div class="container mx-auto px-4 text-center md:w-2/3">
-            <h2 class="text-3xl font-bold text-red-900 mb-6">Nossa História</h2>
-            <p class="text-gray-700 leading-relaxed">O <span class="font-semibold">Inesquecível Sabor</span> nasceu da paixão por pães artesanais e do desejo de oferecer algo especial. Nossos pães são feitos com ingredientes selecionados, fermentação natural e muito cuidado em cada etapa, garantindo uma experiência única de sabor e textura.</p>
-        </div>
-    </section>
-
-    <section id="contato" class="py-16 bg-red-800 text-white">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold mb-6">Faça seu Pedido</h2>
-            <p class="mb-6 max-w-xl mx-auto">Tem dúvidas ou quer fazer um pedido especial? Fale conosco pelo WhatsApp!</p>
-            <div class="flex justify-center items-center space-x-4 text-lg">
-                <i class="fab fa-whatsapp text-red-200"></i>
-                <a href="https://wa.me/5516991420161" target="_blank" class="hover:underline">(16) 99142-0161</a>
+        <section id="produtos" class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-red-900 mb-12">Nossos Sabores</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h3 class="text-xl font-bold text-red-900 mb-2">Calabresa com Catupiry</h3>
+                            <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com calabresa defumada e cremoso catupiry original.</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-xl font-bold text-red-700">R$ 29,99</span>
+                                <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="1" data-name="Calabresa com Catupiry" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h3 class="text-xl font-bold text-red-900 mb-2">Presunto com Catupiry</h3>
+                            <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com presunto premium e catupiry cremoso.</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-xl font-bold text-red-700">R$ 29,99</span>
+                                <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="2" data-name="Presunto com Catupiry" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h3 class="text-xl font-bold text-red-900 mb-2">Tradicional (Sem recheio)</h3>
+                            <p class="text-gray-600 mb-4 flex-grow">Pão artesanal feito com farinha especial e fermentação natural.</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-xl font-bold text-red-700">R$ 29,99</span>
+                                <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="3" data-name="Tradicional (Sem recheio)" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h3 class="text-xl font-bold text-red-900 mb-2">Calabresa Acebolada</h3>
+                            <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com calabresa defumada e cebola caramelizada.</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-xl font-bold text-red-700">R$ 29,99</span>
+                                <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="4" data-name="Calabresa Acebolada" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
+                        <div class="p-6 flex-grow flex flex-col">
+                            <h3 class="text-xl font-bold text-red-900 mb-2">Chocolate Ao Leite</h3>
+                            <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com chocolate ao leite cremoso derretido.</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <span class="text-xl font-bold text-red-700">R$ 29,99</span>
+                                <button class="add-to-cart bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full transition" data-id="5" data-name="Chocolate Ao Leite" data-price="29.99">Adicionar <i class="fas fa-plus ml-1"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <section id="sobre" class="py-16 bg-red-50">
+            <div class="container mx-auto px-4 text-center md:w-2/3">
+                <h2 class="text-3xl font-bold text-red-900 mb-6">Nossa História</h2>
+                <p class="text-gray-700 leading-relaxed">O <span class="font-semibold">Inesquecível Sabor</span> nasceu da paixão por pães artesanais e do desejo de oferecer algo especial. Nossos pães são feitos com ingredientes selecionados, fermentação natural e muito cuidado em cada etapa, garantindo uma experiência única de sabor e textura.</p>
+            </div>
+        </section>
+
+        <section id="contato" class="py-16 bg-red-800 text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl font-bold mb-6">Faça seu Pedido</h2>
+                <p class="mb-6 max-w-xl mx-auto">Tem dúvidas ou quer fazer um pedido especial? Fale conosco pelo WhatsApp!</p>
+                <div class="flex justify-center items-center space-x-4 text-lg">
+                    <i class="fab fa-whatsapp text-red-200"></i>
+                    <a href="https://wa.me/5516991420161" target="_blank" class="hover:underline">(16) 99142-0161</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
     <footer class="bg-red-900 text-white py-8">
         <div class="container mx-auto px-4 text-center">
             <h3 class="text-xl font-bold">Inesquecível Sabor</h3>
@@ -171,7 +165,7 @@
     </div>
 
     <script>
-        // --- Constantes e Variáveis Globais ---
+        // --- Elementos do DOM ---
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const cartBtn = document.getElementById('cart-btn');
@@ -187,9 +181,12 @@
         const cartTotal = document.getElementById('cart-total');
         const deliveryFee = document.getElementById('delivery-fee');
         const successToast = document.getElementById('success-toast');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        
+        // --- Estado da Aplicação ---
         let cart = [];
 
-        // --- Funções Principais do Carrinho e UI ---
+        // --- Funções ---
         function toggleCart() {
             const isHidden = cartSidebar.classList.contains('translate-x-full');
             cartSidebar.classList.toggle('translate-x-full', !isHidden);
@@ -207,107 +204,72 @@
         }
 
         function updateCart() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
+            cartItemsContainer.innerHTML = '';
             if (cart.length === 0) {
-                emptyCartMessage.classList.remove('hidden');
-                cartSummary.classList.add('hidden');
-                cartItemsContainer.innerHTML = '';
+                emptyCartMessage.style.display = 'block';
+                cartSummary.style.display = 'none';
             } else {
-                emptyCartMessage.classList.add('hidden');
-                cartSummary.classList.remove('hidden');
-                cartItemsContainer.innerHTML = cart.map(item => `
-                    <div class="flex justify-between items-center py-4 border-b" data-id="${item.id}">
+                emptyCartMessage.style.display = 'none';
+                cartSummary.style.display = 'block';
+                cart.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between items-center py-4 border-b';
+                    itemElement.dataset.id = item.id;
+                    itemElement.innerHTML = `
                         <div>
                             <h4 class="font-medium">${item.name}</h4>
-                            <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2)}</p>
+                            <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2).replace('.',',')}</p>
                         </div>
                         <div class="flex items-center">
-                            <button class="decrease-quantity text-gray-500 p-1"><i class="fas fa-minus"></i></button>
-                            <span class="mx-2">${item.quantity}</span>
-                            <button class="increase-quantity text-gray-500 p-1"><i class="fas fa-plus"></i></button>
-                            <button class="remove-item text-red-500 ml-4 p-1"><i class="fas fa-trash"></i></button>
+                            <button class="decrease-quantity text-gray-500 p-1" aria-label="Diminuir quantidade"><i class="fas fa-minus"></i></button>
+                            <span class="mx-3">${item.quantity}</span>
+                            <button class="increase-quantity text-gray-500 p-1" aria-label="Aumentar quantidade"><i class="fas fa-plus"></i></button>
+                            <button class="remove-item text-red-500 ml-4 p-1" aria-label="Remover item"><i class="fas fa-trash"></i></button>
                         </div>
-                    </div>`).join('');
-                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
-                const total = subtotal + delivery;
-                cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`;
-                cartTotal.textContent = `R$ ${total.toFixed(2)}`;
+                    `;
+                    cartItemsContainer.appendChild(itemElement);
+                });
             }
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
+            const total = subtotal + delivery;
+            cartSubtotal.textContent = `R$ ${subtotal.toFixed(2).replace('.',',')}`;
+            cartTotal.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
         }
 
-        // --- Event Listeners (Ouvintes de Ações) ---
-        mobileMenuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-        cartBtn.addEventListener('click', toggleCart);
-        closeCartBtn.addEventListener('click', toggleCart);
-        cartOverlay.addEventListener('click', toggleCart);
-
-        addToCartBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
-                const name = btn.dataset.name;
-                const price = parseFloat(btn.dataset.price);
-                const existingItem = cart.find(item => item.id === id);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ id, name, price, quantity: 1 });
-                }
-                updateCart();
-                showSuccessToast();
-            });
-        });
-
-        cartItemsContainer.addEventListener('click', (e) => {
+        function handleCartInteraction(e) {
             const button = e.target.closest('button');
             if (!button) return;
-            
-            // ESTA É A LINHA QUE FOI CORRIGIDA
             const itemElement = e.target.closest('div[data-id]');
             if (!itemElement) return;
-
             const id = itemElement.dataset.id;
             const item = cart.find(i => i.id === id);
             if (!item) return;
-
             if (button.classList.contains('increase-quantity')) {
                 item.quantity++;
             } else if (button.classList.contains('decrease-quantity')) {
-                if (item.quantity > 1) {
-                    item.quantity--;
-                } else {
-                    cart = cart.filter(cartItem => cartItem.id !== id);
-                }
+                if (item.quantity > 1) item.quantity--;
+                else cart = cart.filter(cartItem => cartItem.id !== id);
             } else if (button.classList.contains('remove-item')) {
                 cart = cart.filter(cartItem => cartItem.id !== id);
             }
             updateCart();
-        });
+        }
 
-        // --- LÓGICA FINAL USANDO A BIBLIOTECA PIX ---
-        document.getElementById('checkout-btn').addEventListener('click', async () => {
+        function showPaymentModal() {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
             const total = subtotal + delivery;
+
+            let orderDetails = `Olá! Gostaria de fazer o seguinte pedido:\n\n`;
+            cart.forEach(item => { orderDetails += `▪️ ${item.quantity}x ${item.name}\n`; });
+            orderDetails += `\n*Total (com entrega): R$ ${total.toFixed(2).replace('.',',')}*.\n\nEnviarei o comprovante.`;
+            const encodedOrderDetails = encodeURIComponent(orderDetails);
             
-            const { pixQRCode } = pixQRCodeGenerator;
-
-            const qrCode = pixQRCode({
-                key: '16991420161',
-                name: 'Inesquecivel Sabor',
-                city: 'Sertaozinho',
-                value: total,
-                transactionId: 'PEDIDO' + Date.now()
-            });
-
-            const qrCodeDataURL = await qrCode.toDataURL();
-            const payload = qrCode.payload();
-
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             const whatsappNumber = '5516991420161';
-            let orderDetails = `Olá! Fiz um pedido pelo site (Total: R$ ${total.toFixed(2).replace('.',',')}). Segue o comprovante do PIX.`;
-            const encodedOrderDetails = encodeURIComponent(orderDetails);
             const whatsappLink = isMobile ? `https://wa.me/${whatsappNumber}?text=${encodedOrderDetails}` : `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedOrderDetails}`;
 
             const pixModal = document.createElement('div');
@@ -315,34 +277,48 @@
             pixModal.innerHTML = `
                 <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-red-900">Pague com PIX</h3>
-                        <button id="close-pix" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+                        <h3 class="text-xl font-bold text-red-900">Finalizar Pagamento</h3>
+                        <button id="close-pix-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
                     </div>
                     <p>Total do Pedido: <span class="font-bold text-lg">R$ ${total.toFixed(2).replace('.',',')}</span></p>
-                    <img src="${qrCodeDataURL}" alt="PIX QR Code" class="mx-auto my-4 border-2 border-red-200 p-1 rounded-lg">
-                    <p class="text-sm text-gray-600 mb-2">Escaneie o QR Code ou copie o código abaixo:</p>
-                    <div class="pix-code-box">${payload}</div>
-                    <button id="copy-pix-code" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded-lg w-full mt-2">
-                        <i class="fas fa-copy mr-2"></i>Copiar Código
-                    </button>
-                    <div class="my-4 border-t"></div>
-                    <p class="text-sm font-bold text-gray-700 mb-3">Após pagar, clique para nos avisar:</p>
+                    <p class="text-sm text-gray-600 mt-4 mb-2">Escaneie o código abaixo para pagar com PIX:</p>
+                    <img src="pix-qrcode.png" alt="PIX QR Code" class="mx-auto my-4 border-2 border-red-200 p-1 rounded-lg max-w-full h-auto">
+                    <p class="text-sm font-bold text-gray-700 my-4">Após pagar, clique para nos avisar e enviar o comprovante.</p>
                     <a href="${whatsappLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-full text-center transition w-full inline-block">
-                        <i class="fab fa-whatsapp mr-2"></i> Avisei sobre o Pagamento
+                        <i class="fab fa-whatsapp mr-2"></i> Enviar Comprovante
                     </a>
                 </div>
             `;
             document.body.appendChild(pixModal);
+            document.getElementById('close-pix-modal').addEventListener('click', () => {
+                document.body.removeChild(pixModal);
+            });
+        }
+        
+        // --- Inicialização dos Eventos ---
+        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        cartBtn.addEventListener('click', toggleCart);
+        closeCartBtn.addEventListener('click', toggleCart);
+        cartOverlay.addEventListener('click', toggleCart);
+        cartItemsContainer.addEventListener('click', handleCartInteraction);
+        checkoutBtn.addEventListener('click', showPaymentModal);
 
-            const closeModal = () => document.body.removeChild(pixModal);
-            document.getElementById('close-pix').addEventListener('click', closeModal);
-            document.getElementById('copy-pix-code').addEventListener('click', (e) => {
-                navigator.clipboard.writeText(payload);
-                const button = e.target.closest('button');
-                button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
-                setTimeout(() => { button.innerHTML = '<i class="fas fa-copy mr-2"></i>Copiar Código'; }, 2000);
+        addToCartBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const { id, name, price } = btn.dataset;
+                const existingItem = cart.find(item => item.id === id);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ id, name, price: parseFloat(price), quantity: 1 });
+                }
+                updateCart();
+                showSuccessToast();
             });
         });
+
+        // Inicializa o carrinho na primeira carga
+        updateCart();
     </script>
 </body>
 </html>
