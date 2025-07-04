@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pães Gourmet Recheados | Inesquecível Sabor</title>
+    <title>Inesquecível Sabor | Pães Artesanais</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -49,18 +49,6 @@
         .hero-pattern {
             background-image: radial-gradient(#f3d5b5 1px, transparent 1px);
             background-size: 20px 20px;
-        }
-
-        /* Estilo para o código PIX Copia e Cola */
-        .pix-code-box {
-            word-wrap: break-word;
-            background-color: #f3f4f6;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-family: monospace;
-            font-size: 0.8rem;
-            border: 1px solid #e5e7eb;
-            color: #374151;
         }
     </style>
 </head>
@@ -156,7 +144,7 @@
                 <div class="bread-card bg-white rounded-xl overflow-hidden shadow-md transition">
                      <div class="p-6 flex-grow flex flex-col">
                         <h3 class="text-xl font-bold text-amber-900 mb-2">Calabresa Acebolada</h3>
-                        <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com calabresa defumada e cebola caramelizada.</p>
+                        <p class="text-gray-600 mb-4 flex-grow">Pão artesanal recheado com calabresa e cebola.</p>
                         <div class="flex justify-between items-center mt-4">
                             <span class="text-xl font-bold text-amber-700">R$ 30,00</span>
                             <button class="add-to-cart bg-amber-600 hover:bg-amber-700 text-white py-2 px-4 rounded-full transition" data-id="4" data-name="Calabresa Acebolada" data-price="30.00">
@@ -180,27 +168,7 @@
                     </div>
                 </div>
                 
-                <div class="bread-card bg-amber-50 rounded-xl overflow-hidden shadow-md transition border-2 border-amber-200">
-                    <div class="p-6 flex flex-col h-full">
-                        <div class="mb-4">
-                            <h3 class="text-xl font-bold text-amber-900 mb-2">Combo Especial</h3>
-                            <p class="text-gray-600">Leve 4 pães e pague por 3!</p>
-                        </div>
-                        <div class="flex-grow">
-                            <ul class="list-disc list-inside text-gray-700 mb-4">
-                                <li>1 Calabresa com Catupiry</li>
-                                <li>1 Presunto com Catupiry</li>
-                                <li>1 Calabresa Acebolada</li>
-                                <li>1 Chocolate Ao Leite</li>
-                            </ul>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-gray-500 line-through mr-2">R$ 120,00</span>
-                                <span class="text-xl font-bold text-amber-700">R$ 90,00</span>
-                            </div>
-                            <button class="add-to-cart bg-amber-600 hover:bg-amber-700 text-white py-2 px-4 rounded-full transition" data-id="6" data-name="Combo Especial (4 pães)" data-price="90.00">
-                                Adicionar <i class="fas fa-plus ml-1"></i>
+               
                             </button>
                         </div>
                     </div>
@@ -333,222 +301,204 @@
         <span>Item adicionado ao carrinho!</span>
     </div>
 
-  <script>
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
-
-    const cartBtn = document.getElementById('cart-btn');
-    const cartSidebar = document.getElementById('cart-sidebar');
-    const closeCartBtn = document.getElementById('close-cart');
-    const cartOverlay = document.getElementById('cart-overlay');
-    const addToCartBtns = document.querySelectorAll('.add-to-cart');
-    const cartCount = document.getElementById('cart-count');
-    const cartItemsContainer = document.getElementById('cart-items');
-    const emptyCartMessage = document.getElementById('empty-cart-message');
-    const cartSummary = document.getElementById('cart-summary');
-    const cartSubtotal = document.getElementById('cart-subtotal');
-    const cartTotal = document.getElementById('cart-total');
-    const deliveryFee = document.getElementById('delivery-fee');
-    const successToast = document.getElementById('success-toast');
-
-    let cart = [];
-
-    function toggleCart() {
-        const isHidden = cartSidebar.classList.contains('translate-x-full');
-        cartSidebar.classList.toggle('translate-x-full', !isHidden);
-        cartOverlay.classList.toggle('hidden', !isHidden);
-        document.body.style.overflow = isHidden ? 'hidden' : 'auto';
-    }
-
-    cartBtn.addEventListener('click', toggleCart);
-    closeCartBtn.addEventListener('click', toggleCart);
-    cartOverlay.addEventListener('click', toggleCart);
-
-    addToCartBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = btn.dataset.id;
-            const name = btn.dataset.name;
-            const price = parseFloat(btn.dataset.price);
-
-            const existingItem = cart.find(item => item.id === id);
-            if (existingItem) {
-                existingItem.quantity++;
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    
+        const cartBtn = document.getElementById('cart-btn');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const addToCartBtns = document.querySelectorAll('.add-to-cart');
+        const cartCount = document.getElementById('cart-count');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const cartSummary = document.getElementById('cart-summary');
+        const cartSubtotal = document.getElementById('cart-subtotal');
+        const cartTotal = document.getElementById('cart-total');
+        const deliveryFee = document.getElementById('delivery-fee');
+        const successToast = document.getElementById('success-toast');
+    
+        let cart = [];
+    
+        function toggleCart() {
+            const isHidden = cartSidebar.classList.contains('translate-x-full');
+            cartSidebar.classList.toggle('translate-x-full', !isHidden);
+            cartOverlay.classList.toggle('hidden', !isHidden);
+            document.body.style.overflow = isHidden ? 'hidden' : 'auto';
+        }
+    
+        cartBtn.addEventListener('click', toggleCart);
+        closeCartBtn.addEventListener('click', toggleCart);
+        cartOverlay.addEventListener('click', toggleCart);
+    
+        addToCartBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
+                const price = parseFloat(btn.dataset.price);
+    
+                const existingItem = cart.find(item => item.id === id);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ id, name, price, quantity: 1 });
+                }
+                updateCart();
+                showSuccessToast();
+            });
+        });
+    
+        function updateCart() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+    
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                cartSummary.classList.add('hidden');
+                cartItemsContainer.innerHTML = '';
             } else {
-                cart.push({ id, name, price, quantity: 1 });
+                emptyCartMessage.classList.add('hidden');
+                cartSummary.classList.remove('hidden');
+    
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="flex justify-between items-center py-4 border-b cart-item-enter" data-id="${item.id}">
+                        <div>
+                            <h4 class="font-medium">${item.name}</h4>
+                            <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2)}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <button class="decrease-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-minus"></i></button>
+                            <span class="mx-2">${item.quantity}</span>
+                            <button class="increase-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-plus"></i></button>
+                            <span class="ml-4 font-medium text-right w-16">R$ ${(item.price * item.quantity).toFixed(2)}</span>
+                            <button class="remove-item text-red-500 hover:text-red-700 ml-4"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+    
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
+                const total = subtotal + delivery;
+    
+                cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`;
+                cartTotal.textContent = `R$ ${total.toFixed(2)}`;
+            }
+        }
+    
+        cartItemsContainer.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (!button) return;
+    
+            const itemElement = e.target.closest('.cart-item-enter');
+            const id = itemElement.dataset.id;
+            const item = cart.find(item => item.id === id);
+    
+            if (button.classList.contains('increase-quantity')) {
+                item.quantity++;
+            } else if (button.classList.contains('decrease-quantity')) {
+                if (item.quantity > 1) {
+                    item.quantity--;
+                } else {
+                    cart = cart.filter(cartItem => cartItem.id !== id);
+                }
+            } else if (button.classList.contains('remove-item')) {
+                cart = cart.filter(cartItem => cartItem.id !== id);
             }
             updateCart();
-            showSuccessToast();
         });
-    });
-
-    function updateCart() {
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-        cartCount.textContent = totalItems;
-
-        if (cart.length === 0) {
-            emptyCartMessage.classList.remove('hidden');
-            cartSummary.classList.add('hidden');
-            cartItemsContainer.innerHTML = '';
-        } else {
-            emptyCartMessage.classList.add('hidden');
-            cartSummary.classList.remove('hidden');
-
-            cartItemsContainer.innerHTML = cart.map(item => `
-                <div class="flex justify-between items-center py-4 border-b cart-item-enter" data-id="${item.id}">
-                    <div>
-                        <h4 class="font-medium">${item.name}</h4>
-                        <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2)}</p>
-                    </div>
-                    <div class="flex items-center">
-                        <button class="decrease-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-minus"></i></button>
-                        <span class="mx-2">${item.quantity}</span>
-                        <button class="increase-quantity text-gray-500 hover:text-amber-600 px-2"><i class="fas fa-plus"></i></button>
-                        <span class="ml-4 font-medium text-right w-16">R$ ${(item.price * item.quantity).toFixed(2)}</span>
-                        <button class="remove-item text-red-500 hover:text-red-700 ml-4"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-
+    
+        function showSuccessToast() {
+            successToast.classList.remove('translate-y-16', 'opacity-0');
+            successToast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                successToast.classList.remove('translate-y-0', 'opacity-100');
+                successToast.classList.add('translate-y-16', 'opacity-0');
+            }, 3000);
+        }
+    
+        // MÉTODO DE PAGAMENTO PIX (MANUAL E GARANTIDO)
+        document.getElementById('checkout-btn').addEventListener('click', () => {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
             const total = subtotal + delivery;
-
-            cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`;
-            cartTotal.textContent = `R$ ${total.toFixed(2)}`;
-        }
-    }
-
-    cartItemsContainer.addEventListener('click', (e) => {
-        const button = e.target.closest('button');
-        if (!button) return;
-
-        const itemElement = e.target.closest('.cart-item-enter');
-        const id = itemElement.dataset.id;
-        const item = cart.find(item => item.id === id);
-
-        if (button.classList.contains('increase-quantity')) {
-            item.quantity++;
-        } else if (button.classList.contains('decrease-quantity')) {
-            if (item.quantity > 1) {
-                item.quantity--;
-            } else {
-                cart = cart.filter(cartItem => cartItem.id !== id);
-            }
-        } else if (button.classList.contains('remove-item')) {
-            cart = cart.filter(cartItem => cartItem.id !== id);
-        }
-        updateCart();
-    });
-
-    function showSuccessToast() {
-        successToast.classList.remove('translate-y-16', 'opacity-0');
-        successToast.classList.add('translate-y-0', 'opacity-100');
-        setTimeout(() => {
-            successToast.classList.remove('translate-y-0', 'opacity-100');
-            successToast.classList.add('translate-y-16', 'opacity-0');
-        }, 3000);
-    }
-
-    // --- CÓDIGO PIX CORRIGIDO E SIMPLIFICADO ---
-
-    function formatField(id, value) {
-        const len = value.length.toString().padStart(2, '0');
-        return `${id}${len}${value}`;
-    }
-
-    function crc16(data) {
-        let crc = 0xFFFF;
-        for (let i = 0; i < data.length; i++) {
-            crc ^= data.charCodeAt(i) << 8;
-            for (let j = 0; j < 8; j++) {
-                crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
-            }
-        }
-        return crc.toString(16).toUpperCase().padStart(4, '0');
-    }
-
-    document.getElementById('checkout-btn').addEventListener('click', () => {
-        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
-        const total = subtotal + delivery;
-
-        const pixKey = '16991420161';
-        const merchantName = 'Inesquecivel Sabor';
-        const merchantCity = 'Sertaozinho';
-        
-        // Versão simplificada do ID da transação para máxima compatibilidade
-        const txid = '***';
-
-        // Montagem do Payload PIX (Formato Mais Compatível)
-        const merchantAccountInfo = formatField('00', 'br.gov.bcb.pix') + formatField('01', pixKey);
-        
-        // O campo ID 62 (txid) foi removido para aumentar a compatibilidade
-        let payload = [
-            formatField('00', '01'),
-            formatField('26', merchantAccountInfo),
-            formatField('52', '0000'), // Merchant Category Code
-            formatField('53', '986'), // Moeda (BRL)
-            formatField('54', total.toFixed(2)), // Valor da transação
-            formatField('58', 'BR'), // País
-            formatField('59', merchantName), // Nome do Vendedor
-            formatField('60', merchantCity), // Cidade do Vendedor
-            formatField('62', formatField('05', txid)) // ID da Transação simplificado
-        ].join('');
-
-        const payloadWithCrc = payload + '6304' + crc16(payload + '6304');
-        
-        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(payloadWithCrc)}`;
-
-        let orderDetails = "Olá! Segue o comprovante do pedido abaixo:\n\n";
-        cart.forEach(item => {
-            orderDetails += `▪️ ${item.quantity}x ${item.name}\n`;
-        });
-        orderDetails += `\n*Total pago: R$ ${total.toFixed(2)}*`;
-        const encodedOrderDetails = encodeURIComponent(orderDetails);
-        const whatsappLink = `https://wa.me/5516991420161?text=${encodedOrderDetails}`;
-
-        const pixModal = document.createElement('div');
-        pixModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
-        pixModal.id = 'pix-modal';
-        pixModal.innerHTML = `
-            <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-bold text-amber-900">Pague com PIX</h3>
-                    <button id="close-pix" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+            
+            const pixKeyToCopy = '16991420161';
+            const pixKeyToDisplay = '(16) 99142-0161';
+            const valueToCopy = total.toFixed(2);
+            const valueToDisplay = total.toFixed(2).replace('.', ',');
+    
+            let orderDetails = "Olá! Gostaria de fazer o seguinte pedido:\n\n";
+            cart.forEach(item => {
+                orderDetails += `▪️ ${item.quantity}x ${item.name}\n`;
+            });
+            orderDetails += `\n*Total a ser pago: R$ ${valueToDisplay}*.\n\nEnviarei o comprovante em seguida.`;
+            const encodedOrderDetails = encodeURIComponent(orderDetails);
+            const whatsappLink = `https://wa.me/5516991420161?text=${encodedOrderDetails}`;
+    
+            const pixModal = document.createElement('div');
+            pixModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+            pixModal.id = 'pix-modal';
+            pixModal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-sm w-full text-left">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-amber-900">Pagar com PIX</h3>
+                        <button id="close-pix" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+                    </div>
+    
+                    <p class="text-center mb-4">Siga os passos para concluir seu pedido:</p>
+    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="font-bold text-gray-700">1. Copie a Chave PIX (Celular)</label>
+                            <div class="flex items-center justify-between bg-gray-100 p-2 mt-1 rounded">
+                                <span class="font-mono text-gray-800">${pixKeyToDisplay}</span>
+                                <button id="copy-key-btn" class="bg-amber-600 text-white text-xs font-bold py-1 px-3 rounded hover:bg-amber-700">Copiar</button>
+                            </div>
+                        </div>
+    
+                        <div>
+                            <label class="font-bold text-gray-700">2. Copie o Valor Exato</label>
+                            <div class="flex items-center justify-between bg-gray-100 p-2 mt-1 rounded">
+                                <span class="font-mono font-bold text-gray-800">R$ ${valueToDisplay}</span>
+                                <button id="copy-value-btn" class="bg-amber-600 text-white text-xs font-bold py-1 px-3 rounded hover:bg-amber-700">Copiar</button>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <p class="text-sm text-center text-gray-600 mt-6">Abra o app do seu banco, escolha a área PIX, cole a chave e o valor para pagar.</p>
+                    
+                    <div class="my-4 border-t"></div>
+                    
+                    <p class="text-center font-bold text-gray-700 mb-3">3. Após pagar, nos avise!</p>
+                    <a href="${whatsappLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-full text-center transition w-full inline-block">
+                        <i class="fab fa-whatsapp mr-2"></i> Avisei sobre o Pagamento
+                    </a>
                 </div>
-                <p class="mb-4">Total: <span class="font-bold text-xl">R$ ${total.toFixed(2)}</span></p>
-                <p class="text-sm mb-2">1. Escaneie o QR Code abaixo:</p>
-                <img src="${qrCodeUrl}" alt="PIX QR Code" class="mx-auto my-2 border rounded-lg">
-                <p class="text-sm my-3">2. Ou copie o código e cole no seu app:</p>
-                <div class="pix-code-box" style="word-wrap: break-word; background-color: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.8rem; border: 1px solid #e5e7eb; color: #374151;">${payloadWithCrc}</div>
-                <button id="copy-pix" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded-lg w-full mt-2">
-                    <i class="fas fa-copy mr-2"></i>Copiar Código PIX
-                </button>
-                <div class="my-4 border-t"></div>
-                <p class="text-sm mb-3">3. Após pagar, clique para nos avisar:</p>
-                <a href="${whatsappLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-full text-center transition w-full inline-block">
-                    <i class="fab fa-whatsapp mr-2"></i> Avisei sobre o Pagamento
-                </a>
-            </div>
-        `;
-        document.body.appendChild(pixModal);
-
-        const closeModal = () => document.body.removeChild(pixModal);
-        
-        document.getElementById('close-pix').addEventListener('click', closeModal);
-        
-        document.getElementById('copy-pix').addEventListener('click', (e) => {
-            const button = e.target.closest('button');
-            navigator.clipboard.writeText(payloadWithCrc);
-            button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
-            setTimeout(() => {
-                button.innerHTML = '<i class="fas fa-copy mr-2"></i>Copiar Código PIX';
-            }, 2000);
+            `;
+            document.body.appendChild(pixModal);
+    
+            const closeModal = () => document.body.removeChild(pixModal);
+            
+            document.getElementById('close-pix').addEventListener('click', closeModal);
+            
+            document.getElementById('copy-key-btn').addEventListener('click', (e) => {
+                navigator.clipboard.writeText(pixKeyToCopy);
+                const button = e.target.closest('button');
+                button.textContent = 'Copiado!';
+                setTimeout(() => { button.textContent = 'Copiar'; }, 2000);
+            });
+            
+            document.getElementById('copy-value-btn').addEventListener('click', (e) => {
+                navigator.clipboard.writeText(valueToCopy);
+                const button = e.target.closest('button');
+                button.textContent = 'Copiado!';
+                setTimeout(() => { button.textContent = 'Copiar'; }, 2000);
+            });
         });
-    });
-</script>
+    </script>
 </body>
 </html>
