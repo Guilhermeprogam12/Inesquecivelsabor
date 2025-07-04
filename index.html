@@ -171,32 +171,119 @@
     </div>
 
     <script>
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn'), mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-        const cartBtn = document.getElementById('cart-btn'), cartSidebar = document.getElementById('cart-sidebar'), closeCartBtn = document.getElementById('close-cart'), cartOverlay = document.getElementById('cart-overlay'), addToCartBtns = document.querySelectorAll('.add-to-cart'), cartCount = document.getElementById('cart-count'), cartItemsContainer = document.getElementById('cart-items'), emptyCartMessage = document.getElementById('empty-cart-message'), cartSummary = document.getElementById('cart-summary'), cartSubtotal = document.getElementById('cart-subtotal'), cartTotal = document.getElementById('cart-total'), deliveryFee = document.getElementById('delivery-fee'), successToast = document.getElementById('success-toast');
+        // --- Constantes e Variáveis Globais ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const cartBtn = document.getElementById('cart-btn');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const addToCartBtns = document.querySelectorAll('.add-to-cart');
+        const cartCount = document.getElementById('cart-count');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const cartSummary = document.getElementById('cart-summary');
+        const cartSubtotal = document.getElementById('cart-subtotal');
+        const cartTotal = document.getElementById('cart-total');
+        const deliveryFee = document.getElementById('delivery-fee');
+        const successToast = document.getElementById('success-toast');
         let cart = [];
-        function toggleCart() { const isHidden = cartSidebar.classList.contains('translate-x-full'); cartSidebar.classList.toggle('translate-x-full', !isHidden); cartOverlay.classList.toggle('hidden', !isHidden); document.body.style.overflow = isHidden ? 'hidden' : 'auto'; }
-        cartBtn.addEventListener('click', toggleCart); closeCartBtn.addEventListener('click', toggleCart); cartOverlay.addEventListener('click', toggleCart);
-        addToCartBtns.forEach(btn => { btn.addEventListener('click', () => { const id = btn.dataset.id, name = btn.dataset.name, price = parseFloat(btn.dataset.price); const existingItem = cart.find(item => item.id === id); if (existingItem) { existingItem.quantity++; } else { cart.push({ id, name, price, quantity: 1 }); } updateCart(); showSuccessToast(); }); });
-        function updateCart() { const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); cartCount.textContent = totalItems; if (cart.length === 0) { emptyCartMessage.classList.remove('hidden'); cartSummary.classList.add('hidden'); cartItemsContainer.innerHTML = ''; } else { emptyCartMessage.classList.add('hidden'); cartSummary.classList.remove('hidden'); cartItemsContainer.innerHTML = cart.map(item => `<div class="flex justify-between items-center py-4 border-b" data-id="${item.id}"><div><h4 class="font-medium">${item.name}</h4><p class="text-sm text-gray-600">R$ ${item.price.toFixed(2)}</p></div><div class="flex items-center"><button class="decrease-quantity text-gray-500 p-1"><i class="fas fa-minus"></i></button><span class="mx-2">${item.quantity}</span><button class="increase-quantity text-gray-500 p-1"><i class="fas fa-plus"></i></button><button class="remove-item text-red-500 ml-4 p-1"><i class="fas fa-trash"></i></button></div></div>`).join(''); const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.')); const total = subtotal + delivery; cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`; cartTotal.textContent = `R$ ${total.toFixed(2)}`; } }
+
+        // --- Funções Principais do Carrinho e UI ---
+        function toggleCart() {
+            const isHidden = cartSidebar.classList.contains('translate-x-full');
+            cartSidebar.classList.toggle('translate-x-full', !isHidden);
+            cartOverlay.classList.toggle('hidden', !isHidden);
+            document.body.style.overflow = isHidden ? 'hidden' : 'auto';
+        }
+
+        function showSuccessToast() {
+            successToast.classList.remove('translate-y-16', 'opacity-0');
+            successToast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                successToast.classList.remove('translate-y-0', 'opacity-100');
+                successToast.classList.add('translate-y-16', 'opacity-0');
+            }, 2000);
+        }
+
+        function updateCart() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                cartSummary.classList.add('hidden');
+                cartItemsContainer.innerHTML = '';
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                cartSummary.classList.remove('hidden');
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="flex justify-between items-center py-4 border-b" data-id="${item.id}">
+                        <div>
+                            <h4 class="font-medium">${item.name}</h4>
+                            <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2)}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <button class="decrease-quantity text-gray-500 p-1"><i class="fas fa-minus"></i></button>
+                            <span class="mx-2">${item.quantity}</span>
+                            <button class="increase-quantity text-gray-500 p-1"><i class="fas fa-plus"></i></button>
+                            <button class="remove-item text-red-500 ml-4 p-1"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`).join('');
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
+                const total = subtotal + delivery;
+                cartSubtotal.textContent = `R$ ${subtotal.toFixed(2)}`;
+                cartTotal.textContent = `R$ ${total.toFixed(2)}`;
+            }
+        }
+
+        // --- Event Listeners (Ouvintes de Ações) ---
+        mobileMenuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+        cartBtn.addEventListener('click', toggleCart);
+        closeCartBtn.addEventListener('click', toggleCart);
+        cartOverlay.addEventListener('click', toggleCart);
+
+        addToCartBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const name = btn.dataset.name;
+                const price = parseFloat(btn.dataset.price);
+                const existingItem = cart.find(item => item.id === id);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({ id, name, price, quantity: 1 });
+                }
+                updateCart();
+                showSuccessToast();
+            });
+        });
+
         cartItemsContainer.addEventListener('click', (e) => {
             const button = e.target.closest('button');
             if (!button) return;
-            // ERRO CORRIGIDO AQUI: A busca pelo elemento pai estava incorreta.
+            
+            // ESTA É A LINHA QUE FOI CORRIGIDA
             const itemElement = e.target.closest('div[data-id]');
             if (!itemElement) return;
+
             const id = itemElement.dataset.id;
-            const item = cart.find(item => item.id === id);
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+
             if (button.classList.contains('increase-quantity')) {
                 item.quantity++;
             } else if (button.classList.contains('decrease-quantity')) {
-                if (item.quantity > 1) { item.quantity--; } else { cart = cart.filter(cartItem => cartItem.id !== id); }
+                if (item.quantity > 1) {
+                    item.quantity--;
+                } else {
+                    cart = cart.filter(cartItem => cartItem.id !== id);
+                }
             } else if (button.classList.contains('remove-item')) {
                 cart = cart.filter(cartItem => cartItem.id !== id);
             }
             updateCart();
         });
-        function showSuccessToast() { successToast.classList.remove('translate-y-16', 'opacity-0'); successToast.classList.add('translate-y-0', 'opacity-100'); setTimeout(() => { successToast.classList.remove('translate-y-0', 'opacity-100'); successToast.classList.add('translate-y-16', 'opacity-0'); }, 2000); }
 
         // --- LÓGICA FINAL USANDO A BIBLIOTECA PIX ---
         document.getElementById('checkout-btn').addEventListener('click', async () => {
