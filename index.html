@@ -333,7 +333,7 @@
         <span>Item adicionado ao carrinho!</span>
     </div>
 
-   <script>
+  <script>
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     mobileMenuBtn.addEventListener('click', () => {
@@ -452,7 +452,7 @@
         }, 3000);
     }
 
-    // --- CÓDIGO PIX CORRIGIDO ---
+    // --- CÓDIGO PIX CORRIGIDO E SIMPLIFICADO ---
 
     function formatField(id, value) {
         const len = value.length.toString().padStart(2, '0');
@@ -476,23 +476,26 @@
         const total = subtotal + delivery;
 
         const pixKey = '16991420161';
-        const merchantName = 'Inesquecivel Sabor'; 
+        const merchantName = 'Inesquecivel Sabor';
         const merchantCity = 'Sertaozinho';
-        const txid = '***'; 
-
-        const merchantAccountInfo = formatField('00', 'br.gov.bcb.pix') + formatField('01', pixKey);
-        const additionalData = formatField('05', txid);
         
+        // Versão simplificada do ID da transação para máxima compatibilidade
+        const txid = '***';
+
+        // Montagem do Payload PIX (Formato Mais Compatível)
+        const merchantAccountInfo = formatField('00', 'br.gov.bcb.pix') + formatField('01', pixKey);
+        
+        // O campo ID 62 (txid) foi removido para aumentar a compatibilidade
         let payload = [
             formatField('00', '01'),
             formatField('26', merchantAccountInfo),
-            formatField('52', '0000'),
-            formatField('53', '986'),
-            formatField('54', total.toFixed(2)),
-            formatField('58', 'BR'),
-            formatField('59', merchantName),
-            formatField('60', merchantCity),
-            formatField('62', additionalData)
+            formatField('52', '0000'), // Merchant Category Code
+            formatField('53', '986'), // Moeda (BRL)
+            formatField('54', total.toFixed(2)), // Valor da transação
+            formatField('58', 'BR'), // País
+            formatField('59', merchantName), // Nome do Vendedor
+            formatField('60', merchantCity), // Cidade do Vendedor
+            formatField('62', formatField('05', txid)) // ID da Transação simplificado
         ].join('');
 
         const payloadWithCrc = payload + '6304' + crc16(payload + '6304');
