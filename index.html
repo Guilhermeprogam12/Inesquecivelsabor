@@ -13,6 +13,7 @@
         .bread-card { display: flex; flex-direction: column; }
         .bread-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
         .hero-pattern { background-color: #fee2e2; background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 30px 30px; opacity: 0.4; }
+        .pix-code-box { word-wrap: break-word; background-color: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.8rem; border: 1px solid #e5e7eb; color: #374151; text-align: left; }
     </style>
 </head>
 <body>
@@ -166,6 +167,46 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- Funções de Geração PIX (Autossuficiente) ---
+            function formatField(id, value) {
+                const len = value.length.toString().padStart(2, '0');
+                return `${id}${len}${value}`;
+            }
+
+            function crc16(data) {
+                let crc = 0xFFFF;
+                for (let i = 0; i < data.length; i++) {
+                    crc ^= data.charCodeAt(i) << 8;
+                    for (let j = 0; j < 8; j++) {
+                        crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+                    }
+                }
+                return crc.toString(16).toUpperCase().padStart(4, '0');
+            }
+
+            function generatePixPayload(key, name, city, value) {
+                const merchantName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").substring(0, 25);
+                const merchantCity = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "").substring(0, 15);
+                const txid = '***'; // ID de transação estático para máxima compatibilidade
+
+                const merchantAccountInfo = formatField('00', 'br.gov.bcb.pix') + formatField('01', key);
+                
+                let payload = [
+                    formatField('00', '01'),
+                    formatField('26', merchantAccountInfo),
+                    formatField('52', '0000'),
+                    formatField('53', '986'),
+                    formatField('54', value.toFixed(2)),
+                    formatField('58', 'BR'),
+                    formatField('59', merchantName),
+                    formatField('60', merchantCity),
+                    formatField('62', formatField('05', txid))
+                ].join('');
+
+                return payload + '6304' + crc16(payload + '6304');
+            }
+
+            // --- Lógica Principal do Site ---
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             const cartBtn = document.getElementById('cart-btn');
@@ -259,46 +300,7 @@
                 updateCart();
             }
 
-            // --- FUNÇÕES DE GERAÇÃO PIX (MANUAL E AUTOSSUFICIENTE) ---
-            function formatField(id, value) {
-                const len = value.length.toString().padStart(2, '0');
-                return `${id}${len}${value}`;
-            }
-
-            function crc16(data) {
-                let crc = 0xFFFF;
-                for (let i = 0; i < data.length; i++) {
-                    crc ^= data.charCodeAt(i) << 8;
-                    for (let j = 0; j < 8; j++) {
-                        crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
-                    }
-                }
-                return crc.toString(16).toUpperCase().padStart(4, '0');
-            }
-
-            function generatePixPayload(key, name, city, value) {
-                const merchantName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").substring(0, 25);
-                const merchantCity = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "").substring(0, 15);
-                
-                const merchantAccountInfo = formatField('00', 'br.gov.bcb.pix') + formatField('01', key);
-                
-                // Payload sem ID de transação para máxima compatibilidade
-                let payload = [
-                    formatField('00', '01'),
-                    formatField('26', merchantAccountInfo),
-                    formatField('52', '0000'), // Merchant Category Code
-                    formatField('53', '986'), // Moeda (BRL)
-                    formatField('54', value.toFixed(2)), // Valor
-                    formatField('58', 'BR'), // País
-                    formatField('59', merchantName), // Nome do Vendedor
-                    formatField('60', merchantCity)  // Cidade do Vendedor
-                ].join('');
-
-                const payloadWithCrc = payload + '6304' + crc16(payload + '6304');
-                return payloadWithCrc;
-            }
-
-            async function showPaymentModal(deliveryInfo) {
+            function showPaymentModal(deliveryInfo) {
                 const modalContainer = document.createElement('div');
                 modalContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
                 
@@ -378,7 +380,6 @@
                 });
             }
             
-            // --- Inicialização dos Eventos ---
             mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
             cartBtn.addEventListener('click', toggleCart);
             closeCartBtn.addEventListener('click', toggleCart);
