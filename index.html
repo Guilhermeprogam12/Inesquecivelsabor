@@ -7,6 +7,9 @@
     <link rel="icon" href="logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/renanlido/pix-qr-code-generator@main/dist/pix-qr-code-generator.min.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
@@ -256,11 +259,22 @@
             updateCart();
         }
 
-        function showPaymentModal(deliveryInfo) {
+        async function showPaymentModal(deliveryInfo) {
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
             const total = subtotal + delivery;
 
+            // --- GERAÇÃO DO QR CODE DINÂMICO ---
+            const { pixQRCode } = pixQRCodeGenerator;
+            const qrCode = pixQRCode({
+                key: '16991420161', // Sua chave PIX
+                name: 'Inesquecivel Sabor',
+                city: 'Sertaozinho',
+                value: total,
+                transactionId: 'PEDIDO' + Date.now() // ID único para o pedido
+            });
+            const qrCodeDataURL = await qrCode.toDataURL(); // Gera a imagem do QR Code
+            
             let orderDetails = `*--- NOVO PEDIDO ---*\n\n*Cliente:* ${deliveryInfo.name}\n*Telefone:* ${deliveryInfo.phone}\n*Endereço:* ${deliveryInfo.address}\n\n*--- ITENS DO PEDIDO ---*\n`;
             cart.forEach(item => { orderDetails += `▪️ ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2).replace('.',',')})\n`; });
             orderDetails += `\n*TOTAL (com entrega): R$ ${total.toFixed(2).replace('.',',')}*`;
@@ -269,16 +283,6 @@
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             const whatsappNumber = '5516991420161';
             const whatsappLink = isMobile ? `https://wa.me/${whatsappNumber}?text=${encodedOrderDetails}` : `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedOrderDetails}`;
-
-            // LÓGICA PARA ESCOLHER O QR CODE CORRETO
-            let qrCodeImageFile = 'qrcode-pix.png'; // QR Code padrão
-            const totalUniqueProducts = 5; // Total de produtos diferentes no site
-            
-            if (cart.length === totalUniqueProducts) {
-                qrCodeImageFile = 'qrcode-tudo.png'; // QR Code para todos os produtos
-            } else if (cart.length === 1 && cart[0].id === '3') {
-                qrCodeImageFile = 'qrcode_tradicional.png'; // QR Code especial para o Pão Tradicional
-            }
 
             const pixModal = document.createElement('div');
             pixModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
@@ -289,15 +293,8 @@
                         <button id="close-pix-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
                     </div>
                     <p>Total do Pedido: <span class="font-bold text-lg">R$ ${total.toFixed(2).replace('.',',')}</span></p>
-                    <p class="text-sm text-gray-600 mt-4 mb-2">Escaneie o código abaixo para pagar:</p>
-                    <img src="${qrCodeImageFile}" alt="PIX QR Code" class="mx-auto my-4 border-2 border-red-200 p-1 rounded-lg max-w-full h-auto">
-                    <div class="mt-4">
-                        <p class="text-sm text-gray-600 mb-2">Ou use a chave PIX (celular):</p>
-                        <div class="flex items-center justify-between bg-gray-100 p-2 rounded-lg">
-                            <span class="font-mono text-gray-800">(16) 99142-0161</span>
-                            <button id="copy-key-btn" class="bg-red-600 text-white text-xs font-bold py-1 px-3 rounded hover:bg-red-700">Copiar</button>
-                        </div>
-                    </div>
+                    <p class="text-sm text-gray-600 mt-4 mb-2">Escaneie o QR Code abaixo para pagar:</p>
+                    <img src="${qrCodeDataURL}" alt="PIX QR Code" class="mx-auto my-4 border-2 border-red-200 p-1 rounded-lg">
                     <p class="text-sm font-bold text-gray-700 my-4 pt-4 border-t">Após pagar, envie o comprovante.</p>
                     <a href="${whatsappLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-full text-center transition w-full inline-block">
                         <i class="fab fa-whatsapp mr-2"></i> Enviar Comprovante
@@ -306,12 +303,6 @@
             `;
             document.body.appendChild(pixModal);
             document.getElementById('close-pix-modal').addEventListener('click', () => { document.body.removeChild(pixModal); });
-            document.getElementById('copy-key-btn').addEventListener('click', () => {
-                navigator.clipboard.writeText('16991420161');
-                const button = document.getElementById('copy-key-btn');
-                button.textContent = 'Copiado!';
-                setTimeout(() => { button.textContent = 'Copiar'; }, 2000);
-            });
         }
 
         function showDeliveryInfoModal() {
