@@ -7,6 +7,9 @@
     <link rel="icon" href="logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/gh/renanlido/pix-qr-code-generator@main/dist/pix-qr-code-generator.min.js" defer></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
@@ -165,10 +168,6 @@
     </div>
 
     <script>
-        // --- INÍCIO DA BIBLIOTECA PIX EMBUTIDA ---
-        !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e="undefined"!=typeof globalThis?globalThis:e||self).pixQRCodeGenerator={})}(this,(function(e){"use strict";const t=e=>e.length.toString().padStart(2,"0"),r=(e,n)=>`${e}${t(n)}${n}`,n=(e,t)=>`${e}${t}`,o=e=>{let t=65535;for(let r=0;r<e.length;r++){t^=e.charCodeAt(r)<<8;for(let e=0;e<8;e++)t=1&t<<15?t<<1^4129:t<<1}return t.toString(16).toUpperCase().padStart(4,"0")},a=e=>`https://chart.googleapis.com/chart?chs=512x512&cht=qr&chl=${encodeURIComponent(e)}`;e.pixQRCode=class{constructor({key:e,name:l,city:i,value:c,transactionId:s,message:d}){const u=r("00","01"),f=n("00",r("00","br.gov.bcb.pix"))+n("01",r("01",e))+n("02",r("02",d||""));this.payload=u,this.payload+=n("26",f),this.payload+=r("52","0000"),this.payload+=r("53","986"),this.payload+=r("54",c?c.toFixed(2):"0.00"),this.payload+=r("58","BR"),this.payload+=r("59",(l=>l.normalize("NFD").replace(/[\u0300-\u036f]/g,"").substring(0,25))(l)),this.payload+=r("60",(e=>e.normalize("NFD").replace(/[\u0300-\u036f]/g,"").substring(0,15))(i)),this.payload+=r("62",r("05",s||"***")),this.payload+=n("63",t(o(this.payload+"6304")))}payload(){return this.payload}toString(){return this.payload}toDataURL(){return a(this.payload)}toImage(){const e=document.createElement("img");return e.src=a(this.payload),e}},Object.defineProperty(e,"__esModule",{value:!0})}));
-        // --- FIM DA BIBLIOTECA PIX EMBUTIDA ---
-
         document.addEventListener('DOMContentLoaded', () => {
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -201,7 +200,7 @@
                 setTimeout(() => {
                     successToast.classList.remove('opacity-100', 'translate-y-0');
                     successToast.classList.add('opacity-0', 'translate-y-16');
-                }, 3000);
+                }, 2000);
             }
 
             function updateCart() {
@@ -248,27 +247,42 @@
                 const id = itemElement.dataset.id;
                 const item = cart.find(i => i.id === id);
                 if (!item) return;
+
                 if (button.classList.contains('increase-quantity')) {
                     item.quantity++;
                 } else if (button.classList.contains('decrease-quantity')) {
-                    if (item.quantity > 1) { item.quantity--; } 
-                    else { cart = cart.filter(cartItem => cartItem.id !== id); }
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                    } else {
+                        cart = cart.filter(cartItem => cartItem.id !== id);
+                    }
                 } else if (button.classList.contains('remove-item')) {
                     cart = cart.filter(cartItem => cartItem.id !== id);
                 }
                 updateCart();
             }
 
-            function showPaymentModal(deliveryInfo) {
+            async function showPaymentModal(deliveryInfo) {
                 const modalContainer = document.createElement('div');
                 modalContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
                 
+                modalContainer.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-sm w-full text-center"><i class="fas fa-spinner fa-spin text-4xl text-red-600"></i><p class="mt-4 text-gray-700">Gerando PIX...</p></div>`;
+                document.body.appendChild(modalContainer);
+
+                if (typeof pixQRCodeGenerator === 'undefined') {
+                    alert("Erro: A biblioteca de pagamento não carregou. Por favor, recarregue a página.");
+                    document.body.removeChild(modalContainer);
+                    return;
+                }
+
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
                 const total = subtotal + delivery;
 
                 const { pixQRCode } = pixQRCodeGenerator;
-                const qrCode = pixQRCode({
+
+                // A CORREÇÃO ESTÁ AQUI: Adicionando a palavra 'new'
+                const qrCode = new pixQRCode({
                     key: '16991420161',
                     name: 'Inesquecivel Sabor',
                     city: 'Sertaozinho',
@@ -276,7 +290,7 @@
                     transactionId: 'PEDIDO' + Date.now()
                 });
 
-                const qrCodeDataURL = qrCode.toDataURL();
+                const qrCodeDataURL = await qrCode.toDataURL();
 
                 let orderDetails = `*--- NOVO PEDIDO ---*\n\n*Cliente:* ${deliveryInfo.name}\n*Telefone:* ${deliveryInfo.phone}\n*Endereço:* ${deliveryInfo.address}\n\n*--- ITENS DO PEDIDO ---*\n`;
                 cart.forEach(item => { orderDetails += `▪️ ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2).replace('.',',')})\n`; });
@@ -301,7 +315,6 @@
                         </a>
                     </div>
                 `;
-                document.body.appendChild(modalContainer);
                 modalContainer.querySelector('#close-pix-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
             }
 
@@ -334,7 +347,9 @@
                     </div>
                 `;
                 document.body.appendChild(modalContainer);
+
                 modalContainer.querySelector('#close-delivery-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
+
                 modalContainer.querySelector('#delivery-form').addEventListener('submit', (e) => {
                     e.preventDefault();
                     const deliveryInfo = {
