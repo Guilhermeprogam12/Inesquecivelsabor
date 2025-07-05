@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <script src="https://cdn.jsdelivr.net/gh/renanlido/pix-qr-code-generator@main/dist/pix-qr-code-generator.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/renanlido/pix-qr-code-generator@main/dist/pix-qr-code-generator.min.js" defer></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -16,6 +16,7 @@
         .bread-card { display: flex; flex-direction: column; }
         .bread-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
         .hero-pattern { background-color: #fee2e2; background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 30px 30px; opacity: 0.4; }
+        .pix-code-box { word-wrap: break-word; background-color: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem; font-family: monospace; font-size: 0.8rem; border: 1px solid #e5e7eb; color: #374151; text-align: left; }
     </style>
 </head>
 <body>
@@ -168,116 +169,122 @@
     </div>
 
     <script>
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const cartBtn = document.getElementById('cart-btn');
-        const cartSidebar = document.getElementById('cart-sidebar');
-        const closeCartBtn = document.getElementById('close-cart');
-        const cartOverlay = document.getElementById('cart-overlay');
-        const addToCartBtns = document.querySelectorAll('.add-to-cart');
-        const cartCount = document.getElementById('cart-count');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const emptyCartMessage = document.getElementById('empty-cart-message');
-        const cartSummary = document.getElementById('cart-summary');
-        const cartSubtotal = document.getElementById('cart-subtotal');
-        const cartTotal = document.getElementById('cart-total');
-        const deliveryFee = document.getElementById('delivery-fee');
-        const successToast = document.getElementById('success-toast');
-        const checkoutBtn = document.getElementById('checkout-btn');
-        
-        let cart = [];
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Elementos do DOM ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const cartBtn = document.getElementById('cart-btn');
+            const cartSidebar = document.getElementById('cart-sidebar');
+            const closeCartBtn = document.getElementById('close-cart');
+            const cartOverlay = document.getElementById('cart-overlay');
+            const addToCartBtns = document.querySelectorAll('.add-to-cart');
+            const cartCount = document.getElementById('cart-count');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const cartSummary = document.getElementById('cart-summary');
+            const cartSubtotal = document.getElementById('cart-subtotal');
+            const cartTotal = document.getElementById('cart-total');
+            const deliveryFee = document.getElementById('delivery-fee');
+            const successToast = document.getElementById('success-toast');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            let cart = [];
 
-        function toggleCart() {
-            cartSidebar.classList.toggle('translate-x-full');
-            cartOverlay.classList.toggle('hidden');
-            document.body.style.overflow = cartSidebar.classList.contains('translate-x-full') ? 'auto' : 'hidden';
-        }
-
-        function showSuccessToast() {
-            successToast.classList.add('opacity-100', 'translate-y-0');
-            successToast.classList.remove('opacity-0', 'translate-y-16');
-            setTimeout(() => {
-                successToast.classList.remove('opacity-100', 'translate-y-0');
-                successToast.classList.add('opacity-0', 'translate-y-16');
-            }, 3000);
-        }
-
-        function updateCart() {
-            cartItemsContainer.innerHTML = '';
-            if (cart.length === 0) {
-                emptyCartMessage.style.display = 'block';
-                cartSummary.style.display = 'none';
-            } else {
-                emptyCartMessage.style.display = 'none';
-                cartSummary.style.display = 'block';
-                cart.forEach(item => {
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'flex justify-between items-center py-4 border-b';
-                    itemElement.dataset.id = item.id;
-                    itemElement.innerHTML = `
-                        <div>
-                            <h4 class="font-medium">${item.name}</h4>
-                            <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2).replace('.',',')}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <button class="decrease-quantity text-gray-500 p-1"><i class="fas fa-minus"></i></button>
-                            <span class="mx-3">${item.quantity}</span>
-                            <button class="increase-quantity text-gray-500 p-1"><i class="fas fa-plus"></i></button>
-                            <button class="remove-item text-red-500 ml-4 p-1"><i class="fas fa-trash"></i></button>
-                        </div>
-                    `;
-                    cartItemsContainer.appendChild(itemElement);
-                });
+            // --- Funções ---
+            function toggleCart() {
+                cartSidebar.classList.toggle('translate-x-full');
+                cartOverlay.classList.toggle('hidden');
+                document.body.style.overflow = cartSidebar.classList.contains('translate-x-full') ? 'auto' : 'hidden';
             }
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
-            const total = subtotal + delivery;
-            cartSubtotal.textContent = `R$ ${subtotal.toFixed(2).replace('.',',')}`;
-            cartTotal.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
-        }
 
-        function handleCartInteraction(e) {
-            const button = e.target.closest('button');
-            if (!button) return;
-            const itemElement = e.target.closest('div[data-id]');
-            if (!itemElement) return;
-            const id = itemElement.dataset.id;
-            const item = cart.find(i => i.id === id);
-            if (!item) return;
+            function showSuccessToast() {
+                successToast.classList.add('opacity-100', 'translate-y-0');
+                successToast.classList.remove('opacity-0', 'translate-y-16');
+                setTimeout(() => {
+                    successToast.classList.remove('opacity-100', 'translate-y-0');
+                    successToast.classList.add('opacity-0', 'translate-y-16');
+                }, 3000);
+            }
 
-            if (button.classList.contains('increase-quantity')) {
-                item.quantity++;
-            } else if (button.classList.contains('decrease-quantity')) {
-                if (item.quantity > 1) {
-                    item.quantity--;
+            function updateCart() {
+                cartItemsContainer.innerHTML = '';
+                if (cart.length === 0) {
+                    emptyCartMessage.style.display = 'block';
+                    cartSummary.style.display = 'none';
                 } else {
+                    emptyCartMessage.style.display = 'none';
+                    cartSummary.style.display = 'block';
+                    cart.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'flex justify-between items-center py-4 border-b';
+                        itemElement.dataset.id = item.id;
+                        itemElement.innerHTML = `
+                            <div>
+                                <h4 class="font-medium">${item.name}</h4>
+                                <p class="text-sm text-gray-600">R$ ${item.price.toFixed(2).replace('.',',')}</p>
+                            </div>
+                            <div class="flex items-center">
+                                <button class="decrease-quantity text-gray-500 p-1"><i class="fas fa-minus"></i></button>
+                                <span class="mx-3">${item.quantity}</span>
+                                <button class="increase-quantity text-gray-500 p-1"><i class="fas fa-plus"></i></button>
+                                <button class="remove-item text-red-500 ml-4 p-1"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `;
+                        cartItemsContainer.appendChild(itemElement);
+                    });
+                }
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCount.textContent = totalItems;
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
+                const total = subtotal + delivery;
+                cartSubtotal.textContent = `R$ ${subtotal.toFixed(2).replace('.',',')}`;
+                cartTotal.textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+            }
+
+            function handleCartInteraction(e) {
+                const button = e.target.closest('button');
+                if (!button) return;
+                const itemElement = e.target.closest('div[data-id]');
+                if (!itemElement) return;
+                const id = itemElement.dataset.id;
+                const item = cart.find(i => i.id === id);
+                if (!item) return;
+
+                if (button.classList.contains('increase-quantity')) {
+                    item.quantity++;
+                } else if (button.classList.contains('decrease-quantity')) {
+                    if (item.quantity > 1) {
+                        item.quantity--;
+                    } else {
+                        cart = cart.filter(cartItem => cartItem.id !== id);
+                    }
+                } else if (button.classList.contains('remove-item')) {
                     cart = cart.filter(cartItem => cartItem.id !== id);
                 }
-            } else if (button.classList.contains('remove-item')) {
-                cart = cart.filter(cartItem => cartItem.id !== id);
+                updateCart();
             }
-            updateCart();
-        }
 
-        async function showPaymentModal(deliveryInfo) {
-            const modalContainer = document.createElement('div');
-            modalContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
-            
-            // Pré-carrega o modal com uma mensagem de "gerando..."
-            modalContainer.innerHTML = `
-                <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
-                    <i class="fas fa-spinner fa-spin text-4xl text-red-600"></i>
-                    <p class="mt-4 text-gray-700">Gerando PIX...</p>
-                </div>
-            `;
-            document.body.appendChild(modalContainer);
+            async function showPaymentModal(deliveryInfo) {
+                const modalContainer = document.createElement('div');
+                modalContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+                modalContainer.innerHTML = `
+                    <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+                        <i class="fas fa-spinner fa-spin text-4xl text-red-600"></i>
+                        <p class="mt-4 text-gray-700">Gerando PIX...</p>
+                    </div>`;
+                document.body.appendChild(modalContainer);
 
-            try {
-                // VERIFICA SE A BIBLIOTECA FOI CARREGADA
+                // Verificação para garantir que a biblioteca PIX carregou.
                 if (typeof pixQRCodeGenerator === 'undefined') {
-                    throw new Error("Biblioteca PIX não carregou.");
+                    modalContainer.innerHTML = `
+                        <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+                            <h3 class="text-xl font-bold text-red-900">Erro de Carregamento</h3>
+                            <p class="my-4">Não foi possível carregar o sistema de pagamento. Por favor, recarregue a página (F5) e tente novamente.</p>
+                            <button id="close-error-modal" class="bg-red-600 text-white py-2 px-4 rounded">Fechar</button>
+                        </div>`;
+                    modalContainer.querySelector('#close-error-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
+                    return;
                 }
 
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -303,7 +310,6 @@
                 const whatsappNumber = '5516991420161';
                 const whatsappLink = isMobile ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderDetails)}` : `https://web.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(orderDetails)}`;
 
-                // Atualiza o conteúdo do modal com as informações do PIX
                 modalContainer.innerHTML = `
                     <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
                         <div class="flex justify-between items-center mb-4">
@@ -320,87 +326,76 @@
                     </div>
                 `;
                 modalContainer.querySelector('#close-pix-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
+            }
 
-            } catch (error) {
-                console.error("Falha ao gerar PIX:", error);
+            function showDeliveryInfoModal() {
+                const modalContainer = document.createElement('div');
+                modalContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
                 modalContainer.innerHTML = `
-                    <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
-                        <h3 class="text-xl font-bold text-red-900">Erro!</h3>
-                        <p class="my-4">Não foi possível gerar o QR Code. Por favor, tente novamente ou entre em contato.</p>
-                        <button id="close-error-modal" class="bg-red-600 text-white py-2 px-4 rounded">Fechar</button>
+                    <div class="bg-white rounded-lg p-6 max-w-sm w-full">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-red-900">Informações para Entrega</h3>
+                            <button id="close-delivery-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
+                        </div>
+                        <form id="delivery-form">
+                            <div class="mb-4">
+                                <label for="customer-name" class="block text-gray-700 font-medium mb-2">Nome Completo</label>
+                                <input type="text" id="customer-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="customer-phone" class="block text-gray-700 font-medium mb-2">Telefone (WhatsApp)</label>
+                                <input type="tel" id="customer-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <div class="mb-6">
+                                <label for="customer-address" class="block text-gray-700 font-medium mb-2">Endereço Completo (Rua, N°, Bairro)</label>
+                                <input type="text" id="customer-address" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                            </div>
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-full shadow-md transition w-full">
+                                Continuar para Pagamento
+                            </button>
+                        </form>
                     </div>
                 `;
-                modalContainer.querySelector('#close-error-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
+                document.body.appendChild(modalContainer);
+
+                modalContainer.querySelector('#close-delivery-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
+
+                modalContainer.querySelector('#delivery-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const deliveryInfo = {
+                        name: document.getElementById('customer-name').value,
+                        phone: document.getElementById('customer-phone').value,
+                        address: document.getElementById('customer-address').value,
+                    };
+                    document.body.removeChild(modalContainer);
+                    showPaymentModal(deliveryInfo);
+                });
             }
-        }
+            
+            // --- Inicialização dos Eventos ---
+            mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            cartBtn.addEventListener('click', toggleCart);
+            closeCartBtn.addEventListener('click', toggleCart);
+            cartOverlay.addEventListener('click', toggleCart);
+            cartItemsContainer.addEventListener('click', handleCartInteraction);
+            checkoutBtn.addEventListener('click', showDeliveryInfoModal);
 
-        function showDeliveryInfoModal() {
-            const modalContainer = document.createElement('div');
-            modalContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
-            modalContainer.innerHTML = `
-                <div class="bg-white rounded-lg p-6 max-w-sm w-full">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-bold text-red-900">Informações para Entrega</h3>
-                        <button id="close-delivery-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
-                    </div>
-                    <form id="delivery-form">
-                        <div class="mb-4">
-                            <label for="customer-name" class="block text-gray-700 font-medium mb-2">Nome Completo</label>
-                            <input type="text" id="customer-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
-                        </div>
-                        <div class="mb-4">
-                            <label for="customer-phone" class="block text-gray-700 font-medium mb-2">Telefone (WhatsApp)</label>
-                            <input type="tel" id="customer-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="customer-address" class="block text-gray-700 font-medium mb-2">Endereço Completo (Rua, N°, Bairro)</label>
-                            <input type="text" id="customer-address" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
-                        </div>
-                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-full shadow-md transition w-full">
-                            Continuar para Pagamento
-                        </button>
-                    </form>
-                </div>
-            `;
-            document.body.appendChild(modalContainer);
-
-            modalContainer.querySelector('#close-delivery-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
-
-            modalContainer.querySelector('#delivery-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const deliveryInfo = {
-                    name: document.getElementById('customer-name').value,
-                    phone: document.getElementById('customer-phone').value,
-                    address: document.getElementById('customer-address').value,
-                };
-                document.body.removeChild(modalContainer);
-                showPaymentModal(deliveryInfo);
+            addToCartBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const { id, name, price } = btn.dataset;
+                    const existingItem = cart.find(item => item.id === id);
+                    if (existingItem) {
+                        existingItem.quantity++;
+                    } else {
+                        cart.push({ id, name, price: parseFloat(price), quantity: 1 });
+                    }
+                    updateCart();
+                    showSuccessToast();
+                });
             });
-        }
-        
-        // --- Inicialização dos Eventos ---
-        mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-        cartBtn.addEventListener('click', toggleCart);
-        closeCartBtn.addEventListener('click', toggleCart);
-        cartOverlay.addEventListener('click', toggleCart);
-        cartItemsContainer.addEventListener('click', handleCartInteraction);
-        checkoutBtn.addEventListener('click', showDeliveryInfoModal);
 
-        addToCartBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const { id, name, price } = btn.dataset;
-                const existingItem = cart.find(item => item.id === id);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ id, name, price: parseFloat(price), quantity: 1 });
-                }
-                updateCart();
-                showSuccessToast();
-            });
+            updateCart(); // Inicializa o carrinho na primeira carga
         });
-
-        updateCart(); // Inicializa o carrinho na primeira carga
     </script>
 </body>
 </html>
