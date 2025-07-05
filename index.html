@@ -7,9 +7,6 @@
     <link rel="icon" href="logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/gh/renanlido/pix-qr-code-generator@main/dist/pix-qr-code-generator.min.js" defer></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
@@ -168,6 +165,10 @@
     </div>
 
     <script>
+        // --- INÍCIO DA BIBLIOTECA PIX EMBUTIDA ---
+        !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t((e="undefined"!=typeof globalThis?globalThis:e||self).pixQRCodeGenerator={})}(this,(function(e){"use strict";const t=e=>e.length.toString().padStart(2,"0"),r=(e,n)=>`${e}${t(n)}${n}`,n=(e,t)=>`${e}${t}`,o=e=>{let t=65535;for(let r=0;r<e.length;r++){t^=e.charCodeAt(r)<<8;for(let e=0;e<8;e++)t=1&t<<15?t<<1^4129:t<<1}return t.toString(16).toUpperCase().padStart(4,"0")},a=e=>`https://chart.googleapis.com/chart?chs=512x512&cht=qr&chl=${encodeURIComponent(e)}`;e.pixQRCode=class{constructor({key:e,name:l,city:i,value:c,transactionId:s,message:d}){const u=r("00","01"),f=n("00",r("00","br.gov.bcb.pix"))+n("01",r("01",e))+(d?n("02",r("02",d)):"");this.payload=u,this.payload+=n("26",f),this.payload+=r("52","0000"),this.payload+=r("53","986"),this.payload+=r("54",c?c.toFixed(2):"0.00"),this.payload+=r("58","BR"),this.payload+=r("59",(l=>l.normalize("NFD").replace(/[\u0300-\u036f]/g,"").substring(0,25))(l)),this.payload+=r("60",(e=>e.normalize("NFD").replace(/[\u0300-\u036f]/g,"").substring(0,15))(i)),this.payload+=r("62",r("05",s||"***")),this.payload+=n("63",t(o(this.payload+"6304")))}payload(){return this.payload}toString(){return this.payload}async toDataURL(){return a(this.payload)}toImage(){const e=document.createElement("img");return e.src=a(this.payload),e}},Object.defineProperty(e,"__esModule",{value:!0})}));
+        // --- FIM DA BIBLIOTECA PIX EMBUTIDA ---
+
         document.addEventListener('DOMContentLoaded', () => {
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -265,23 +266,16 @@
             async function showPaymentModal(deliveryInfo) {
                 const modalContainer = document.createElement('div');
                 modalContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
-                
                 modalContainer.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-sm w-full text-center"><i class="fas fa-spinner fa-spin text-4xl text-red-600"></i><p class="mt-4 text-gray-700">Gerando PIX...</p></div>`;
                 document.body.appendChild(modalContainer);
-
-                if (typeof pixQRCodeGenerator === 'undefined') {
-                    alert("Erro: A biblioteca de pagamento não carregou. Por favor, recarregue a página.");
-                    document.body.removeChild(modalContainer);
-                    return;
-                }
 
                 const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
                 const total = subtotal + delivery;
 
                 const { pixQRCode } = pixQRCodeGenerator;
-
-                // A CORREÇÃO ESTÁ AQUI: Adicionando a palavra 'new'
+                
+                // CORREÇÃO FINAL: Usando a palavra 'new' para instanciar a classe da biblioteca.
                 const qrCode = new pixQRCode({
                     key: '16991420161',
                     name: 'Inesquecivel Sabor',
@@ -291,6 +285,7 @@
                 });
 
                 const qrCodeDataURL = await qrCode.toDataURL();
+                const payload = qrCode.payload();
 
                 let orderDetails = `*--- NOVO PEDIDO ---*\n\n*Cliente:* ${deliveryInfo.name}\n*Telefone:* ${deliveryInfo.phone}\n*Endereço:* ${deliveryInfo.address}\n\n*--- ITENS DO PEDIDO ---*\n`;
                 cart.forEach(item => { orderDetails += `▪️ ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2).replace('.',',')})\n`; });
@@ -307,15 +302,26 @@
                             <button id="close-pix-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
                         </div>
                         <p>Total do Pedido: <span class="font-bold text-lg">R$ ${total.toFixed(2).replace('.',',')}</span></p>
-                        <p class="text-sm text-gray-600 mt-4 mb-2">Escaneie o QR Code abaixo para pagar:</p>
+                        <p class="text-sm text-gray-600 mt-4 mb-2">Escaneie o QR Code ou copie o código abaixo:</p>
                         <img src="${qrCodeDataURL}" alt="PIX QR Code" class="mx-auto my-4 border-2 border-red-200 p-1 rounded-lg">
-                        <p class="text-sm font-bold text-gray-700 my-4 pt-4 border-t">Após pagar, envie o comprovante.</p>
+                        <div class="pix-code-box">${payload}</div>
+                        <button id="copy-pix-code" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-bold py-2 px-4 rounded-lg w-full mt-2">
+                            <i class="fas fa-copy mr-2"></i>Copiar Código
+                        </button>
+                        <div class="my-4 border-t"></div>
+                        <p class="text-sm font-bold text-gray-700 mb-3">Após pagar, envie o comprovante.</p>
                         <a href="${whatsappLink}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-full text-center transition w-full inline-block">
                             <i class="fab fa-whatsapp mr-2"></i> Enviar Comprovante
                         </a>
                     </div>
                 `;
                 modalContainer.querySelector('#close-pix-modal').addEventListener('click', () => { document.body.removeChild(modalContainer); });
+                modalContainer.querySelector('#copy-pix-code').addEventListener('click', (e) => {
+                    navigator.clipboard.writeText(payload);
+                    const button = e.target.closest('button');
+                    button.innerHTML = '<i class="fas fa-check mr-2"></i> Copiado!';
+                    setTimeout(() => { button.innerHTML = '<i class="fas fa-copy mr-2"></i>Copiar Código'; }, 2000);
+                });
             }
 
             function showDeliveryInfoModal() {
