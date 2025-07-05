@@ -167,7 +167,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Funções de Geração PIX (Autossuficiente) ---
+            // --- FUNÇÕES DE GERAÇÃO PIX (AUTOSSUFICIENTE E EMBUTIDO) ---
             function formatField(id, value) {
                 const len = value.length.toString().padStart(2, '0');
                 return `${id}${len}${value}`;
@@ -175,21 +175,27 @@
 
             function crc16(data) {
                 let crc = 0xFFFF;
+                let polynomial = 0x1021;
                 for (let i = 0; i < data.length; i++) {
-                    crc ^= data.charCodeAt(i) << 8;
+                    crc ^= (data.charCodeAt(i) & 0xFF) << 8;
                     for (let j = 0; j < 8; j++) {
-                        crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+                        if ((crc & 0x8000) !== 0) {
+                            crc = ((crc << 1) & 0xFFFF) ^ polynomial;
+                        } else {
+                            crc = (crc << 1) & 0xFFFF;
+                        }
                     }
                 }
                 return crc.toString(16).toUpperCase().padStart(4, '0');
             }
 
-            function generatePixPayload(key, name, city, value) {
+            function generatePixPayload({key, name, city, value = 0, transactionId = '***'}) {
                 const merchantName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").substring(0, 25);
                 const merchantCity = city.normalize("NFD").replace(/[\u0300-\u036f]/g, "").substring(0, 15);
-                const txid = '***'; // ID de transação estático para máxima compatibilidade
+                const txid = transactionId.replace(/\s/g, '').substring(0, 25);
 
                 const merchantAccountInfo = formatField('00', 'br.gov.bcb.pix') + formatField('01', key);
+                const additionalData = formatField('05', txid);
                 
                 let payload = [
                     formatField('00', '01'),
@@ -200,11 +206,13 @@
                     formatField('58', 'BR'),
                     formatField('59', merchantName),
                     formatField('60', merchantCity),
-                    formatField('62', formatField('05', txid))
+                    formatField('62', additionalData)
                 ].join('');
 
                 return payload + '6304' + crc16(payload + '6304');
             }
+            // --- FIM DAS FUNÇÕES PIX ---
+
 
             // --- Lógica Principal do Site ---
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -308,7 +316,14 @@
                 const delivery = parseFloat(deliveryFee.textContent.replace('R$ ', '').replace(',', '.'));
                 const total = subtotal + delivery;
 
-                const payload = generatePixPayload('16991420161', 'Inesquecivel Sabor', 'Sertaozinho', total);
+                const payload = generatePixPayload({
+                    key: '16991420161',
+                    name: 'Inesquecivel Sabor',
+                    city: 'Sertaozinho',
+                    value: total,
+                    transactionId: 'PEDIDO' + Date.now()
+                });
+                
                 const qrCodeUrl = `https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(payload)}`;
 
                 let orderDetails = `*--- NOVO PEDIDO ---*\n\n*Cliente:* ${deliveryInfo.name}\n*Telefone:* ${deliveryInfo.phone}\n*Endereço:* ${deliveryInfo.address}\n\n*--- ITENS DO PEDIDO ---*\n`;
@@ -380,6 +395,7 @@
                 });
             }
             
+            // --- Inicialização dos Eventos ---
             mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
             cartBtn.addEventListener('click', toggleCart);
             closeCartBtn.addEventListener('click', toggleCart);
