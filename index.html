@@ -272,7 +272,11 @@
 
             // LÓGICA PARA ESCOLHER O QR CODE CORRETO
             let qrCodeImageFile = 'qrcode-pix.png'; // QR Code padrão
-            if (cart.length === 1 && cart[0].id === '3') {
+            const totalUniqueProducts = 5; // Total de produtos diferentes no site
+            
+            if (cart.length === totalUniqueProducts) {
+                qrCodeImageFile = 'qrcode-tudo.png'; // QR Code para todos os produtos
+            } else if (cart.length === 1 && cart[0].id === '3') {
                 qrCodeImageFile = 'qrcode_tradicional.png'; // QR Code especial para o Pão Tradicional
             }
 
