@@ -304,71 +304,44 @@
                 pixModal.querySelector('#close-pix-modal').addEventListener('click', () => { document.body.removeChild(pixModal); });
             }
 
-            function showDeliveryInfoModal() {
-                const deliveryModal = document.createElement('div');
-                deliveryModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
-                deliveryModal.innerHTML = `
-                    <div class="bg-white rounded-lg p-6 max-w-sm w-full">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-bold text-red-900">Informações para Entrega</h3>
-                            <button id="close-delivery-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
-                        </div>
-                        <form id="delivery-form">
-                            <div class="mb-4">
-                                <label for="customer-name" class="block text-gray-700 font-medium mb-2">Nome Completo</label>
-                                <input type="text" id="customer-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="customer-phone" class="block text-gray-700 font-medium mb-2">Telefone (WhatsApp)</label>
-                                <input type="tel" id="customer-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
-                            </div>
-                            <div class="mb-6">
-                                <label for="customer-address" class="block text-gray-700 font-medium mb-2">Endereço Completo (Rua, N°, Bairro)</label>
-                                <input type="text" id="customer-address" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
-                            </div>
-                            <button type="submit" class="bg-red-700 hover:bg-red-800 text-white font-medium py-3 px-6 rounded-full shadow-md transition w-full">
-                                Continuar para Pagamento
-                            </button>
-                        </form>
+            functionfunction showDeliveryInfoModal() {
+            const deliveryModal = document.createElement('div');
+            deliveryModal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+            deliveryModal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-sm w-full">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-red-900">Informações para Entrega</h3>
+                        <button id="close-delivery-modal" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times"></i></button>
                     </div>
-                `;
-                document.body.appendChild(deliveryModal);
-                document.getElementById('close-delivery-modal').addEventListener('click', () => { document.body.removeChild(deliveryModal); });
-                document.getElementById('delivery-form').addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    const deliveryInfo = {
-                        name: document.getElementById('customer-name').value,
-                        phone: document.getElementById('customer-phone').value,
-                        address: document.getElementById('customer-address').value,
-                    };
-                    document.body.removeChild(deliveryModal);
-                    showPaymentModal(deliveryInfo);
-                });
-            }
-            
-            mobileMenuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-            cartBtn.addEventListener('click', toggleCart);
-            closeCartBtn.addEventListener('click', toggleCart);
-            cartOverlay.addEventListener('click', toggleCart);
-            cartItemsContainer.addEventListener('click', handleCartInteraction);
-            checkoutBtn.addEventListener('click', showDeliveryInfoModal);
-
-            addToCartBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const { id, name, price } = btn.dataset;
-                    const existingItem = cart.find(item => item.id === id);
-                    if (existingItem) {
-                        existingItem.quantity++;
-                    } else {
-                        cart.push({ id, name, price: parseFloat(price), quantity: 1 });
-                    }
-                    updateCart();
-                    showSuccessToast();
-                });
+                    <form id="delivery-form">
+                        <div class="mb-4">
+                            <label for="customer-name" class="block text-gray-700 font-medium mb-2">Nome Completo</label>
+                            <input type="text" id="customer-name" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="customer-phone" class="block text-gray-700 font-medium mb-2">Telefone (WhatsApp)</label>
+                            <input type="tel" id="customer-phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="customer-address" class="block text-gray-700 font-medium mb-2">Endereço Completo (Rua, N°, Bairro)</label>
+                            <input type="text" id="customer-address" class="w-full px-4 py-2 border border-gray-300 rounded-lg" required>
+                        </div>
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-full shadow-md transition w-full">
+                            Continuar para Pagamento
+                        </button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(deliveryModal);
+            document.getElementById('close-delivery-modal').addEventListener('click', () => { document.body.removeChild(deliveryModal); });
+            document.getElementById('delivery-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const deliveryInfo = {
+                    name: document.getElementById('customer-name').value,
+                    phone: document.getElementById('customer-phone').value,
+                    address: document.getElementById('customer-address').value,
+                };
+                document.body.removeChild(deliveryModal);
+                showPaymentModal(deliveryInfo);
             });
-
-            updateCart();
-        });
-    </script>
-</body>
-</html>
+        }
